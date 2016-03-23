@@ -4,14 +4,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.PixelFormat;
 import android.graphics.RectF;
-import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -23,7 +19,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -52,7 +47,7 @@ public class AppListActivity extends AppCompatActivity {
     }
     private void loadApps(){
         manager = getPackageManager();
-        apps = new ArrayList<AppDetails>();
+        apps = new ArrayList<>();
 
         Intent i = new Intent(Intent.ACTION_MAIN, null);
         i.addCategory(Intent.CATEGORY_LAUNCHER);
@@ -60,8 +55,8 @@ public class AppListActivity extends AppCompatActivity {
         List<ResolveInfo> availableActivities = manager.queryIntentActivities(i, 0);
         for(ResolveInfo ri:availableActivities){
             AppDetails app = new AppDetails();
-            app.label = "";//ri.loadLabel(manager);
-            app.name = "";//ri.activityInfo.packageName;
+            app.label = ri.loadLabel(manager);
+            app.name = ri.activityInfo.packageName;
             app.icon = iosifyIcons(ri);
             apps.add(app);
         }
@@ -81,11 +76,11 @@ public class AppListActivity extends AppCompatActivity {
                 ImageView appIcon = (ImageView)convertView.findViewById(R.id.item_app_icon);
                 appIcon.setImageDrawable(apps.get(position).icon);
 
-                TextView appLabel = (TextView)convertView.findViewById(R.id.item_app_label);
-                appLabel.setText(apps.get(position).label);
+                String appLabel;
+                appLabel = (String)apps.get(position).label;
 
-                TextView appName = (TextView)convertView.findViewById(R.id.item_app_name);
-                appName.setText(apps.get(position).name);
+                String appName;
+                appName = (String)apps.get(position).name;
 
                 return convertView;
             }
