@@ -156,7 +156,7 @@ public class AppListActivity extends AppCompatActivity {
     @Override
     public void onStop(){
         super.onStop();
-        sor.onReceive(this,);
+        //sor.onReceive(this,);
     }
 
     @Override
