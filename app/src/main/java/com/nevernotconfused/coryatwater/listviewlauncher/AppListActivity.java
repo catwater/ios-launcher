@@ -1,6 +1,7 @@
 package com.nevernotconfused.coryatwater.listviewlauncher;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
@@ -32,10 +33,19 @@ public class AppListActivity extends AppCompatActivity {
     private PackageManager manager;
     private List<AppDetails> apps;
     private List<ImageView> appImages;
+    private ScreenOffReceiver sor;
 
     private GridView list;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+        sor = new ScreenOffReceiver();
+        final IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+        filter.addAction(Intent.ACTION_SCREEN_OFF);
+        registerReceiver(sor,filter);
+
+
         setContentView(R.layout.activity_app_grid);
 
         //IconBitmapProcessor icbm = new IconBitmapProcessor(this.getApplicationContext(),getPackageManager(),getResources());
@@ -43,7 +53,6 @@ public class AppListActivity extends AppCompatActivity {
         loadApps();
         loadListView();
         addClickListener();
-        Log.w(TAG, "onItemClick: made it here");
     }
     private void loadApps(){
         manager = getPackageManager();
@@ -141,8 +150,17 @@ public class AppListActivity extends AppCompatActivity {
         canvas.drawBitmap(iconBitmap,25,24,null);
         BitmapDrawable finalIcon = new BitmapDrawable(getResources(),mutableBitmap);
 
-        Log.w(TAG, "doInBackground: AND HERE?" );
-
         return finalIcon;
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        sor.onReceive(this,);
+    }
+
+    @Override
+    public void onRestart(){
+        super.onRestart();
     }
 }
